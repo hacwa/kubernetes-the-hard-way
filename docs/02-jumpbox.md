@@ -58,6 +58,7 @@ cat downloads.txt
 Download the binaries listed in the `downloads.txt` file into a directory called `downloads` using the `wget` command:
 
 ```bash
+sed -i s/arm/amd/g downloads.txt &&
 wget -q --show-progress \
   --https-only \
   --timestamping \
