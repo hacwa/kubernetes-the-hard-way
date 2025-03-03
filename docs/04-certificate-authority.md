@@ -73,7 +73,7 @@ done
 The results of running the above command will generate a private key, certificate request, and signed SSL certificate for each of the Kubernetes components. You can list the generated files with the following command:
 
 ```bash
-ls -1 *.crt *.key *.csr
+find . -type f \( -name "*.crt" -o -name "*.key" -o -name "*.csr" \)
 ```
 
 ## Distribute the Client and Server Certificates
