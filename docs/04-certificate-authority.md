@@ -93,12 +93,22 @@ for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
 done
 ```
 
-Copy the appropriate certificates and private keys to the `server` machine:
+Copy the appropriate certificates and private keys to the `Control-Plane` machines:
 
 ```bash
-for host in $(cat machines.txt  | awk '{print $3}'|grep Plane); \
-  do scp   ca.key ca.crt   kube-api-server.key kube-api-server.crt   service-accounts.key service-accounts.crt \
-  root@$host:~/;   done
+for host in $(awk '{print $3}' machines.txt | grep Plane); do
+  echo "Copying files to $host"
+  
+  ssh root@$host "mkdir -p /etc/kubernetes/pki/"
+  scp \
+    ca.key ca.crt \
+    kube-api-server/kube-api-server.key kube-api-server/kube-api-server.crt \
+    service-accounts/service-accounts.key service-accounts/service-accounts.crt \
+    root@$host:/etc/kubernetes/pki/
+  
+  echo "Checking IP address on $host:"
+  ssh root@$host "ip a | grep 10.0."
+done
 ```
 
 > The `kube-proxy`, `kube-controller-manager`, `kube-scheduler`, and `kubelet` client certificates will be used to generate client authentication configuration files in the next lab.
