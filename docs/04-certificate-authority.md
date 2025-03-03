@@ -83,16 +83,13 @@ In this section you will copy the various certificates to every machine at a pat
 Copy the appropriate certificates and private keys to the `node-0` and `node-1` machines:
 
 ```bash
-for host in $(cat machines.txt  | awk '{print $3}'|grep Worker); do
-  ssh root@$host mkdir /var/lib/kubelet/
+for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
+  ssh root@$host "mkdir -p /var/lib/kubelet/"
   
   scp ca.crt root@$host:/var/lib/kubelet/
-    
-  scp $host.crt \
-    root@$host:/var/lib/kubelet/kubelet.crt
-    
-  scp $host.key \
-    root@$host:/var/lib/kubelet/kubelet.key
+
+  scp "${host}/${host}.crt" root@$host:/var/lib/kubelet/kubelet.crt
+  scp "${host}/${host}.key" root@$host:/var/lib/kubelet/kubelet.key
 done
 ```
 
