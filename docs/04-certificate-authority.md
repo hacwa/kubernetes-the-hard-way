@@ -51,19 +51,22 @@ certs=(
 ```
 
 ```bash
-for i in ${certs[*]}; do
-  openssl genrsa -out "${i}.key" 4096
-
-  openssl req -new -key "${i}.key" -sha256 \
-    -config "ca.conf" -section ${i} \
-    -out "${i}.csr"
+for i in "${certs[@]}"; do
+  # Create a directory for each cert
+  mkdir -p "${i}"
   
-  openssl x509 -req -days 3653 -in "${i}.csr" \
+  openssl genrsa -out "${i}/${i}.key" 4096
+
+  openssl req -new -key "${i}/${i}.key" -sha256 \
+    -config "ca.conf" -section "${i}" \
+    -out "${i}/${i}.csr"
+  
+  openssl x509 -req -days 3653 -in "${i}/${i}.csr" \
     -copy_extensions copyall \
     -sha256 -CA "ca.crt" \
     -CAkey "ca.key" \
     -CAcreateserial \
-    -out "${i}.crt"
+    -out "${i}/${i}.crt"
 done
 ```
 
