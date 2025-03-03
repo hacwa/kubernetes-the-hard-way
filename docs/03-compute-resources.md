@@ -19,9 +19,13 @@ cat machines.txt
 ```
 
 ```text
-XXX.XXX.XXX.XXX server.kubernetes.local server  
-XXX.XXX.XXX.XXX node-0.kubernetes.local node-0 10.200.0.0/24
-XXX.XXX.XXX.XXX node-1.kubernetes.local node-1 10.200.1.0/24
+10.0.18.2 jumpbox.hacwa.internal server  
+10.0.16.2 K8S-Control-Plane-01.hacwa.internal K8S-Control-Plane-01 10.0.16.0/28
+10.0.16.3 K8S-Control-Plane-02.hacwa.internal K8S-Control-Plane-02 10.0.16.0/28
+10.0.16.4 K8S-Control-Plane-03.hacwa.internal K8S-Control-Plane-03 10.0.16.0/28
+10.0.17.2 K8S-Worker-01-LXC.hacwa.internal K8S-Worker-01-LXC 10.0.17.0/28
+10.0.17.3 K8S-Worker-02-LXC.hacwa.internal K8S-Worker-02-LXC 10.0.17.0/28
+10.0.17.4 K8S-Worker-03-LXC.hacwa.internal K8S-Worker-03-LXC 10.0.17.0/28
 ```
 
 Now it's your turn to create a `machines.txt` file with the details for the three machines you will be using to create your Kubernetes cluster. Use the example machine database from above and add the details for your machines. 
@@ -90,9 +94,13 @@ done < machines.txt
 ```
 
 ```text
-aarch64 GNU/Linux
-aarch64 GNU/Linux
-aarch64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
+x86_64 GNU/Linux
 ```
 
 ## Hostnames
@@ -105,9 +113,7 @@ Set the hostname on each machine listed in the `machines.txt` file:
 
 ```bash
 while read IP FQDN HOST SUBNET; do 
-    CMD="sed -i 's/^127.0.1.1.*/127.0.1.1\t${FQDN} ${HOST}/' /etc/hosts"
-    ssh -n root@${IP} "$CMD"
-    ssh -n root@${IP} hostnamectl hostname ${HOST}
+  ssh -n root@${IP} uname -o -m
 done < machines.txt
 ```
 
@@ -120,9 +126,13 @@ done < machines.txt
 ```
 
 ```text
-server.kubernetes.local
-node-0.kubernetes.local
-node-1.kubernetes.local
+K8s-Gateway-01-LXC.hacwa.internal
+K8S-Control-Plane-01-LXC.hacwa.internal
+K8S-Control-Plane-02-LXC.hacwa.internal
+K8S-Control-Plane-03-LXC.hacwa.internal
+K8S-Worker-01-LXC.hacwa.internal
+K8S-Worker-02-LXC.hacwa.internal
+K8S-Worker-03-LXC.hacwa.internal
 ```
 
 ## Host Lookup Table
@@ -195,15 +205,18 @@ XXX.XXX.XXX.XXX node-1.kubernetes.local node-1
 At this point you should be able to SSH to each machine listed in the `machines.txt` file using a hostname.
 
 ```bash
-for host in server node-0 node-1
+for host in $(cat machines.txt  | awk '{print $3}'| egrep -iv 'jump|Gate|server')
    do ssh root@${host} uname -o -m -n
 done
 ```
 
 ```text
-server aarch64 GNU/Linux
-node-0 aarch64 GNU/Linux
-node-1 aarch64 GNU/Linux
+K8S-Control-Plane-01 x86_64 GNU/Linux
+K8S-Control-Plane-02 x86_64 GNU/Linux
+K8S-Control-Plane-03 x86_64 GNU/Linux
+K8S-Worker-01-LXC x86_64 GNU/Linux
+K8S-Worker-02-LXC x86_64 GNU/Linux
+K8S-Worker-03-LXC x86_64 GNU/Linux
 ```
 
 ## Adding `/etc/hosts` Entries To The Remote Machines
