@@ -9,7 +9,7 @@ Copy `etcd` binaries and systemd unit files to the `server` instance:
 ```bash
 for host in $(awk '{print $3}' machines.txt | grep Plane); do
 scp \
-  downloads/etcd-v3.4.34-linux-arm64.tar.gz \
+  downloads/etcd-v3.4.34-linux-amd64.tar.gz \
   units/etcd.service \
   root@$host:~/ ;
 done
@@ -24,7 +24,10 @@ done
 The commands in this lab must be run on the `server` machine. Login to the `server` machine using the `ssh` command. Example:
 
 ```bash
-ssh root@$host
+ssh root@K8S-Control-Plane-01
+ssh root@K8S-Control-Plane-02
+ssh root@K8S-Control-Plane-03
+
 ```
 
 ## Bootstrapping an etcd Cluster
@@ -43,43 +46,105 @@ Extract and install the `etcd` server and the `etcdctl` command line utility:
 ### Configure the etcd Server
 
 
-
-cp: cannot stat 'kube-api-server.key': No such file or directory
-cp: cannot stat 'kube-api-server.crt': No such file or directory
-cp: cannot stat 'kube-api-server.key': No such file or directory
-cp: cannot stat 'kube-api-server.crt': No such file or directory
-cp: cannot stat 'kube-api-server.key': No such file or directory
-cp: cannot stat 'kube-api-server.crt': No such file or directory
-cp: cannot stat 'kube-api-server.key': No such file or directory
-cp: cannot stat 'kube-api-server.crt': No such file or directory
-
-
-
 ```bash
 {
   mkdir -p /etc/etcd /var/lib/etcd
   chmod 700 /var/lib/etcd
-  cp ca.crt kube-api-server.key kube-api-server.crt \
+  cp /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/kube-api-server.key /etc/kubernetes/pki/kube-api-server.crt \
     /etc/etcd/
 }
 ```
 
-Each etcd member must have a unique name within an etcd cluster. Set the etcd name to match the hostname of the current compute instance:
-
 Create the `etcd.service` systemd unit file:
 
 ```bash
+
+
+[Service]
+Type=notify
+Environment="ETCD_UNSUPPORTED_ARCH=amd64"
+ExecStart=/usr/local/bin/etcd \
+  --name K8S-Control-Plane-01 \
+  --initial-advertise-peer-urls http://10.0.16.2:2380 \
+  --listen-peer-urls http://10.0.16.2:2380 \
+  --listen-client-urls http://10.0.16.2:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.16.2:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster K8S-Control-Plane-01=http://10.0.16.2:2380,K8S-Control-Plane-02=http://10.0.16.3:2380,K8S-Control-Plane-03=http://10.0.16.4:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
 mv etcd.service /etc/systemd/system/
+
+{
+  systemctl daemon-reload
+  systemctl enable etcd
+  systemctl start etcd &
+}
+
+
+
+[Service]
+Type=notify
+Environment="ETCD_UNSUPPORTED_ARCH=amd64"
+ExecStart=/usr/local/bin/etcd \
+  --name K8S-Control-Plane-02 \
+  --initial-advertise-peer-urls http://10.0.16.3:2380 \
+  --listen-peer-urls http://10.0.16.3:2380 \
+  --listen-client-urls http://10.0.16.3:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.16.3:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster K8S-Control-Plane-01=http://10.0.16.2:2380,K8S-Control-Plane-02=http://10.0.16.3:2380,K8S-Control-Plane-03=http://10.0.16.4:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+mv etcd.service /etc/systemd/system/
+
+{
+  systemctl daemon-reload
+  systemctl enable etcd
+  systemctl start etcd &
+}
+
+
+
+[Service]
+Type=notify
+Environment="ETCD_UNSUPPORTED_ARCH=amd64"
+ExecStart=/usr/local/bin/etcd \
+  --name K8S-Control-Plane-03 \
+  --initial-advertise-peer-urls http://10.0.16.4:2380 \
+  --listen-peer-urls http://10.0.16.4:2380 \
+  --listen-client-urls http://10.0.16.4:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.16.4:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster K8S-Control-Plane-01=http://10.0.16.2:2380,K8S-Control-Plane-02=http://10.0.16.3:2380,K8S-Control-Plane-03=http://10.0.16.4:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+mv etcd.service /etc/systemd/system/
+
+{
+  systemctl daemon-reload
+  systemctl enable etcd
+  systemctl start etcd &
+}
+
+
+
+
 ```
 
 ### Start the etcd Server
 
 ```bash
-{
-  systemctl daemon-reload
-  systemctl enable etcd
-  systemctl start etcd
-}
+
 ```
 
 ## Verification
