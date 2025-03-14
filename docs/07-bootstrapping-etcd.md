@@ -7,16 +7,24 @@ Kubernetes components are stateless and store cluster state in [etcd](https://gi
 Copy `etcd` binaries and systemd unit files to the `server` instance:
 
 ```bash
+for host in $(awk '{print $3}' machines.txt | grep Plane); do
 scp \
   downloads/etcd-v3.4.34-linux-arm64.tar.gz \
   units/etcd.service \
-  root@server:~/
+  root@$host:~/ ;
+done
 ```
+
+
+
+
+
+
 
 The commands in this lab must be run on the `server` machine. Login to the `server` machine using the `ssh` command. Example:
 
 ```bash
-ssh root@server
+ssh root@$host
 ```
 
 ## Bootstrapping an etcd Cluster
@@ -27,12 +35,25 @@ Extract and install the `etcd` server and the `etcdctl` command line utility:
 
 ```bash
 {
-  tar -xvf etcd-v3.4.34-linux-arm64.tar.gz
-  mv etcd-v3.4.34-linux-arm64/etcd* /usr/local/bin/
+  tar -xvf etcd-v3.4.34-linux-amd64.tar.gz
+  mv etcd-v3.4.34-linux-amd64/etcd* /usr/local/bin/
 }
 ```
 
 ### Configure the etcd Server
+
+
+
+cp: cannot stat 'kube-api-server.key': No such file or directory
+cp: cannot stat 'kube-api-server.crt': No such file or directory
+cp: cannot stat 'kube-api-server.key': No such file or directory
+cp: cannot stat 'kube-api-server.crt': No such file or directory
+cp: cannot stat 'kube-api-server.key': No such file or directory
+cp: cannot stat 'kube-api-server.crt': No such file or directory
+cp: cannot stat 'kube-api-server.key': No such file or directory
+cp: cannot stat 'kube-api-server.crt': No such file or directory
+
+
 
 ```bash
 {
