@@ -82,11 +82,9 @@ Copy the appropriate certificates and private keys to the `node-0` and `node-1` 
 ```bash
 for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
   ssh root@$host "mkdir -p /var/lib/kubelet/"
-  
   scp ca.crt root@$host:/var/lib/kubelet/
-
-  scp "${host}/${host}.crt" root@$host:/var/lib/kubelet/kubelet.crt
-  scp "${host}/${host}.key" root@$host:/var/lib/kubelet/kubelet.key
+  scp "${host}.crt" root@$host:/var/lib/kubelet/kubelet.crt
+  scp "${host}.key" root@$host:/var/lib/kubelet/kubelet.key
 done
 ```
 
@@ -99,10 +97,9 @@ for host in $(awk '{print $3}' machines.txt | grep Plane); do
   ssh root@$host "mkdir -p /etc/kubernetes/pki/"
   scp \
     ca.key ca.crt \
-    kube-api-server/kube-api-server.key kube-api-server/kube-api-server.crt \
-    service-accounts/service-accounts.key service-accounts/service-accounts.crt \
+    kube-api-server.key kube-api-server.crt \
+    service-accounts.key service-accounts.crt \
     root@$host:/etc/kubernetes/pki/
-  
   echo "Checking IP address on $host:"
   ssh root@$host "ip a | grep 10.0."
 done
