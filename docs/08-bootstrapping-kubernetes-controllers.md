@@ -4,9 +4,11 @@ In this lab you will bootstrap the Kubernetes control plane. The following compo
 
 ## Prerequisites
 
-Connect to the `jumpbox` and copy Kubernetes binaries and systemd unit files to the `server` instance:
+Connect to the `jumpbox` and copy Kubernetes binaries and systemd unit files to the `server - DOES THIS MEAN CONTROLLER?!?!?!?!?!?! fkit, I am trying on CONTROLLER` instance:
 
 ```bash
+
+for host in $(awk '{print $3}' machines.txt | grep Plane); do
 scp \
   downloads/kube-apiserver \
   downloads/kube-controller-manager \
@@ -17,13 +19,17 @@ scp \
   units/kube-scheduler.service \
   configs/kube-scheduler.yaml \
   configs/kube-apiserver-to-kubelet.yaml \
-  root@server:~/
+  root@$host:~/ ;
+done
 ```
 
 The commands in this lab must be run on the controller instance: `server`. Login to the controller instance using the `ssh` command. Example:
 
 ```bash
-ssh root@server
+ssh root@K8S-Control-Plane-01
+ssh root@K8S-Control-Plane-02
+ssh root@K8S-Control-Plane-03
+
 ```
 
 ## Provision the Kubernetes Control Plane
@@ -51,7 +57,7 @@ Install the Kubernetes binaries:
 }
 ```
 
-### Configure the Kubernetes API Server
+### Configure the Kubernetes API Server   - this shit here..... are they the files which are in /etc/kubernetes/pki?!?! - gotta go back :/ 
 
 ```bash
 {
