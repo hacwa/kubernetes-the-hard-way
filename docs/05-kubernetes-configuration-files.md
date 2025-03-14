@@ -15,8 +15,8 @@ When generating kubeconfig files for Kubelets the client certificate matching th
 Generate a kubeconfig file for the node-0 worker node:
 
 ```bash
-for host in node-0 node-1; do
-  kubectl config set-cluster kubernetes-the-hard-way \
+for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
     --server=https://server.kubernetes.local:6443 \
@@ -29,7 +29,7 @@ for host in node-0 node-1; do
     --kubeconfig=${host}.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=hacwa\
     --user=system:node:${host} \
     --kubeconfig=${host}.kubeconfig
 
@@ -41,8 +41,18 @@ done
 Results:
 
 ```text
-node-0.kubeconfig
-node-1.kubeconfig
+Cluster "hacwa" set.
+User "system:node:K8S-Worker-01-LXC" set.
+Context "default" created.
+Switched to context "default".
+Cluster "hacwa" set.
+User "system:node:K8S-Worker-02-LXC" set.
+Context "default" created.
+Switched to context "default".
+Cluster "hacwa" set.
+User "system:node:K8S-Worker-03-LXC" set.
+Context "default" created.
+Switched to context "default".
 ```
 
 ### The kube-proxy Kubernetes Configuration File
@@ -51,7 +61,7 @@ Generate a kubeconfig file for the `kube-proxy` service:
 
 ```bash
 {
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
     --server=https://server.kubernetes.local:6443 \
@@ -64,7 +74,7 @@ Generate a kubeconfig file for the `kube-proxy` service:
     --kubeconfig=kube-proxy.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=hacwa\
     --user=system:kube-proxy \
     --kubeconfig=kube-proxy.kubeconfig
 
@@ -76,6 +86,13 @@ Generate a kubeconfig file for the `kube-proxy` service:
 Results:
 
 ```text
+
+Cluster "hacwa" set.
+User "system:kube-proxy" set.
+Context "default" modified.
+Switched to context "default".
+
+
 kube-proxy.kubeconfig
 ```
 
@@ -85,7 +102,7 @@ Generate a kubeconfig file for the `kube-controller-manager` service:
 
 ```bash
 {
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
     --server=https://server.kubernetes.local:6443 \
@@ -98,7 +115,7 @@ Generate a kubeconfig file for the `kube-controller-manager` service:
     --kubeconfig=kube-controller-manager.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=hacwa\
     --user=system:kube-controller-manager \
     --kubeconfig=kube-controller-manager.kubeconfig
 
@@ -120,7 +137,7 @@ Generate a kubeconfig file for the `kube-scheduler` service:
 
 ```bash
 {
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
     --server=https://server.kubernetes.local:6443 \
@@ -133,7 +150,7 @@ Generate a kubeconfig file for the `kube-scheduler` service:
     --kubeconfig=kube-scheduler.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=hacwa\
     --user=system:kube-scheduler \
     --kubeconfig=kube-scheduler.kubeconfig
 
@@ -154,7 +171,7 @@ Generate a kubeconfig file for the `admin` user:
 
 ```bash
 {
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
     --server=https://127.0.0.1:6443 \
@@ -167,7 +184,7 @@ Generate a kubeconfig file for the `admin` user:
     --kubeconfig=admin.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=hacwa\
     --user=admin \
     --kubeconfig=admin.kubeconfig
 
@@ -187,7 +204,7 @@ admin.kubeconfig
 Copy the `kubelet` and `kube-proxy` kubeconfig files to the node-0 instance:
 
 ```bash
-for host in node-0 node-1; do
+for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
   ssh root@$host "mkdir /var/lib/{kube-proxy,kubelet}"
   
   scp kube-proxy.kubeconfig \
@@ -198,13 +215,15 @@ for host in node-0 node-1; do
 done
 ```
 
-Copy the `kube-controller-manager` and `kube-scheduler` kubeconfig files to the controller instance:
+Copy the `kube-controller-manager` and `kube-scheduler` kubeconfig files to the controller instances:
 
 ```bash
+for host in $(awk '{print $3}' machines.txt | grep Plane); do
 scp admin.kubeconfig \
   kube-controller-manager.kubeconfig \
   kube-scheduler.kubeconfig \
-  root@server:~/
+  root@$host:~/  ;
+done
 ```
 
 Next: [Generating the Data Encryption Config and Key](06-data-encryption-keys.md)
