@@ -77,45 +77,84 @@ find . -type f \( -name "*.crt" -o -name "*.key" -o -name "*.csr" \)
 
 In this section you will copy the various certificates to every machine at a path where each Kubernetes component will search for its certificate pair. In a real-world environment these certificates should be treated like a set of sensitive secrets as they are used as credentials by the Kubernetes components to authenticate to each other.
 
-Copy the appropriate certificates and private keys to the `node-0` and `node-1` machines:
+Copy the appropriate certificates and private keys to the worker nodes machines:
 
 ```bash
-for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
-  ssh root@$host "mkdir -p /var/lib/kubelet/"
-  scp ca.crt root@$host:/var/lib/kubelet/
-  scp "${host}.crt" root@$host:/var/lib/kubelet/kubelet.crt
-  scp "${host}.key" root@$host:/var/lib/kubelet/kubelet.key
+for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+  echo "Setting up kubelet files on $host..."
+  
+  # Ensure SSH connection works
+  if ! ssh root@"$host" "mkdir -p /var/lib/kubelet/"; then
+    echo "ERROR: SSH connection failed for $host. Skipping..."
+    continue
+  fi
+
+  FILES=(
+    "ca.crt"
+    "${host}.crt"
+    "${host}.key"
+  )
+
+  DESTS=(
+    "/var/lib/kubelet/ca.crt"
+    "/var/lib/kubelet/kubelet.crt"
+    "/var/lib/kubelet/kubelet.key"
+  )
+
+  for i in "${!FILES[@]}"; do
+    if [[ ! -f "${FILES[$i]}" ]]; then
+      echo "ERROR: File ${FILES[$i]} does not exist. Skipping..."
+      continue
+    fi
+
+    scp "${FILES[$i]}" "root@$host:${DESTS[$i]}"
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR: Failed to copy ${FILES[$i]} to $host"
+      continue
+    fi
+  done
+
+  echo "Completed setup for $host"
 done
 ```
 
 Copy the appropriate certificates and private keys to the `Control-Plane` machines:
 
 ```bash
-for host in $(awk '{print $3}' machines.txt | grep Plane); do
-  echo "Copying files to $host"
-  
-  ssh root@$host "mkdir -p /etc/kubernetes/pki/"
-  scp \
-    ca.key ca.crt \
-    kube-api-server.key kube-api-server.crt \
-    service-accounts.key service-accounts.crt \
-    root@$host:/etc/kubernetes/pki/
-  echo "Checking IP address on $host:"
-  ssh root@$host "ip a | grep 10.0."
-done
 
-#set -e  # Exit on first failure
-#for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
-#  echo "Copying files to $host"
-#  ssh root@$host "mkdir -p /etc/kubernetes/pki/" || { echo "SSH failed to $host"; continue; }  
-#  scp ca.key ca.crt \
-#      kube-api-server.key kube-api-server.crt \
-#      service-accounts.key service-accounts.crt \
-#      root@$host:/etc/kubernetes/pki/ || { echo "SCP failed to $host"; continue; }
-#  
-#  echo "Checking IP address on $host:"
-#  ssh root@$host "ip a | grep -E '10\.[0-9]+'" || echo "IP check failed on $host"
-#done
+for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+  echo "Copying files to $host..."
+
+  # Ensure SSH connection works
+  if ! ssh root@"$host" "mkdir -p /etc/kubernetes/pki/"; then
+    echo "ERROR: SSH connection failed for $host. Skipping..."
+    continue
+  fi
+
+  FILES=(
+    "ca.key"
+    "ca.crt"
+    "kube-api-server.key"
+    "kube-api-server.crt"
+    "service-accounts.key"
+    "service-accounts.crt"
+  )
+
+  for file in "${FILES[@]}"; do
+    if [[ ! -f "$file" ]]; then
+      echo "ERROR: File $file does not exist. Skipping..."
+      continue
+    fi
+
+    scp "$file" "root@$host:/etc/kubernetes/pki/"
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR: Failed to copy $file to $host"
+      continue
+    fi
+  done
+
+  echo "Completed file copy for $host"
+done
 
 
 ```
