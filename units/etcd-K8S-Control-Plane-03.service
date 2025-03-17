@@ -1,0 +1,21 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/etcd-io/etcd
+
+[Service]
+Type=notify
+ExecStart=/usr/local/bin/etcd \
+  --name K8S-Control-Plane-03 \
+  --initial-advertise-peer-urls http://10.0.16.4:2380 \
+  --listen-peer-urls http://10.0.16.4:2380 \
+  --listen-client-urls http://10.0.16.4:2379,http://127.0.0.1:2379 \
+  --advertise-client-urls http://10.0.16.4:2379 \
+  --initial-cluster-token etcd-cluster-0 \
+  --initial-cluster K8S-Control-Plane-01=http://10.0.16.2:2380,K8S-Control-Plane-02=http://10.0.16.3:2380,K8S-Control-Plane-03=http://10.0.16.4:2380 \
+  --initial-cluster-state new \
+  --data-dir=/var/lib/etcd
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
