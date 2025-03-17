@@ -95,10 +95,13 @@ Install the Kubernetes binaries:
 }
 ```
 
-
+```bash
 scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-01-LXC:~
 scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-LXC:~
 scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-LXC:~
+```
+
+
 
 ### Configure the Kubernetes API Server   - this shit here..... are they the files which are in /etc/kubernetes/pki?!?! - gotta go back :/ 
 
