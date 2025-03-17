@@ -24,8 +24,24 @@ envsubst < configs/encryption-config.yaml \
 Copy the `encryption-config.yaml` encryption config file to each controller instance:
 
 ```bash
-for host in $(awk '{print $3}' machines.txt | grep Plane); do
-scp encryption-config.yaml root@$host:~/ ;
+FILE="encryption-config.yaml"
+
+# Ensure the file exists before proceeding
+if [[ ! -f "$FILE" ]]; then
+  echo "ERROR: $FILE does not exist. Aborting."
+  exit 1
+fi
+
+for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+  echo "Copying $FILE to $host..."
+
+  scp "$FILE" "root@$host:~/"
+  if [[ $? -ne 0 ]]; then
+    echo "ERROR: Failed to copy $FILE to $host"
+    continue
+  fi
+
+  echo "Successfully copied $FILE to $host"
 done
 ```
 
