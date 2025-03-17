@@ -162,25 +162,73 @@ Generate a kubeconfig file for the `admin` user:
 Copy the `kubelet` and `kube-proxy` kubeconfig files to the node-0 instance:
 
 ```bash
-for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
-  ssh root@$host "mkdir /var/lib/{kube-proxy,kubelet}"
+
+for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+  echo "Configuring kubelet and kube-proxy on $host..."
   
-  scp kube-proxy.kubeconfig \
-    root@$host:/var/lib/kube-proxy/kubeconfig \
-  
-  scp ${host}.kubeconfig \
-    root@$host:/var/lib/kubelet/kubeconfig
+  # Ensure SSH connection works
+  if ! ssh root@"$host" "mkdir -p /var/lib/kube-proxy /var/lib/kubelet"; then
+    echo "ERROR: SSH connection failed for $host. Skipping..."
+    continue
+  fi
+
+  FILES=(
+    "kube-proxy.kubeconfig"
+    "${host}.kubeconfig"
+  )
+
+  DESTS=(
+    "/var/lib/kube-proxy/kubeconfig"
+    "/var/lib/kubelet/kubeconfig"
+  )
+
+  for i in "${!FILES[@]}"; do
+    if [[ ! -f "${FILES[$i]}" ]]; then
+      echo "ERROR: File ${FILES[$i]} does not exist. Skipping..."
+      continue
+    fi
+
+    scp "${FILES[$i]}" "root@$host:${DESTS[$i]}"
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR: Failed to copy ${FILES[$i]} to $host"
+      continue
+    fi
+  done
+
+  echo "Setup completed for $host"
 done
 ```
 
 Copy the `kube-controller-manager` and `kube-scheduler` kubeconfig files to the controller instances:
 
 ```bash
-for host in $(awk '{print $3}' machines.txt | grep Plane); do
-scp admin.kubeconfig \
-  kube-controller-manager.kubeconfig \
-  kube-scheduler.kubeconfig \
-  root@$host:~/  ;
+
+FILES=(
+  "admin.kubeconfig"
+  "kube-controller-manager.kubeconfig"
+  "kube-scheduler.kubeconfig"
+)
+
+# Ensure all required files exist before proceeding
+for file in "${FILES[@]}"; do
+  if [[ ! -f "$file" ]]; then
+    echo "ERROR: File $file does not exist. Aborting."
+    exit 1
+  fi
+done
+
+for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+  echo "Copying kubeconfig files to $host..."
+
+  for file in "${FILES[@]}"; do
+    scp "$file" "root@$host:~/"
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR: Failed to copy $file to $host"
+      continue
+    fi
+  done
+
+  echo "Successfully copied all files to $host"
 done
 ```
 
