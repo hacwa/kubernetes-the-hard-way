@@ -103,6 +103,21 @@ for host in $(awk '{print $3}' machines.txt | grep Plane); do
   echo "Checking IP address on $host:"
   ssh root@$host "ip a | grep 10.0."
 done
+
+#set -e  # Exit on first failure
+#for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+#  echo "Copying files to $host"
+#  ssh root@$host "mkdir -p /etc/kubernetes/pki/" || { echo "SSH failed to $host"; continue; }  
+#  scp ca.key ca.crt \
+#      kube-api-server.key kube-api-server.crt \
+#      service-accounts.key service-accounts.crt \
+#      root@$host:/etc/kubernetes/pki/ || { echo "SCP failed to $host"; continue; }
+#  
+#  echo "Checking IP address on $host:"
+#  ssh root@$host "ip a | grep -E '10\.[0-9]+'" || echo "IP check failed on $host"
+#done
+
+
 ```
 
 > The `kube-proxy`, `kube-controller-manager`, `kube-scheduler`, and `kubelet` client certificates will be used to generate client authentication configuration files in the next lab.
