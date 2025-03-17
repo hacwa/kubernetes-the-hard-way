@@ -7,23 +7,6 @@ In this lab you will bootstrap the Kubernetes control plane. The following compo
 Connect to the `jumpbox` and copy Kubernetes binaries and systemd unit files to the `server - DOES THIS MEAN CONTROLLER?!?!?!?!?!?! fkit, I am trying on CONTROLLER` instance:
 
 ```bash
-
-for host in $(awk '{print $3}' machines.txt | grep Plane); do
-scp \
-  downloads/kube-apiserver \
-  downloads/kube-controller-manager \
-  downloads/kube-scheduler \
-  downloads/kubectl \
-  units/kube-apiserver.service \
-  units/kube-controller-manager.service \
-  units/kube-scheduler.service \
-  configs/kube-scheduler.yaml \
-  configs/kube-apiserver-to-kubelet.yaml \
-  root@$host:~/ ;
-done
-```
-
-```bash
 for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
   echo "Copying files to $host..."
   
@@ -57,7 +40,6 @@ for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
   echo "Completed copying files to $host"
 done
 ```
-
 
 
 
