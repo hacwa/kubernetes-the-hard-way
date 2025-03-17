@@ -23,6 +23,44 @@ scp \
 done
 ```
 
+```bash
+for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+  echo "Copying files to $host..."
+  
+  FILES=(
+    "downloads/kube-apiserver"
+    "downloads/kube-controller-manager"
+    "downloads/kube-scheduler"
+    "downloads/kubectl"
+    "units/kube-apiserver.service"
+    "units/kube-controller-manager.service"
+    "units/kube-scheduler.service"
+    "configs/kube-scheduler.yaml"
+    "configs/kube-apiserver-to-kubelet.yaml"
+  )
+
+  for file in "${FILES[@]}"; do
+    if [[ ! -f "$file" ]]; then
+      echo "ERROR: File $file does not exist. Skipping..."
+      continue
+    fi
+
+    scp "$file" "root@$host:~/"
+    if [[ $? -ne 0 ]]; then
+      echo "ERROR: Failed to copy $file to $host"
+      continue
+    fi
+
+    echo "Successfully copied $file to $host"
+  done
+
+  echo "Completed copying files to $host"
+done
+```
+
+
+
+
 The commands in this lab must be run on the controller instance: `server`. Login to the controller instance using the `ssh` command. Example:
 
 ```bash
@@ -56,6 +94,11 @@ Install the Kubernetes binaries:
     /usr/local/bin/
 }
 ```
+
+
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-01-LXC:~
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-LXC:~
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-LXC:~
 
 ### Configure the Kubernetes API Server   - this shit here..... are they the files which are in /etc/kubernetes/pki?!?! - gotta go back :/ 
 
