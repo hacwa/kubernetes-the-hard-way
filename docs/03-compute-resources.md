@@ -26,6 +26,7 @@ cat machines.txt
 10.0.17.2 K8S-Worker-01-LXC.hacwa.internal K8S-Worker-01-LXC 10.0.17.0/28
 10.0.17.3 K8S-Worker-02-LXC.hacwa.internal K8S-Worker-02-LXC 10.0.17.0/28
 10.0.17.4 K8S-Worker-03-LXC.hacwa.internal K8S-Worker-03-LXC 10.0.17.0/28
+10.0.19.10 lb-01.hacwa.internal 10.0.19.0/28
 ```
 
 Now it's your turn to create a `machines.txt` file with the details for the three machines you will be using to create your Kubernetes cluster. Use the example machine database from above and add the details for your machines. 
