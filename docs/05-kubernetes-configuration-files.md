@@ -19,7 +19,7 @@ for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://:6443 \
+    --server=https://lb-01.hacwa.internal:6443 \
     --kubeconfig=${host}.kubeconfig
 
   kubectl config set-credentials system:node:${host} \
@@ -38,23 +38,6 @@ for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
 done
 ```
 
-Results:
-
-```text
-Cluster "hacwa" set.
-User "system:node:K8S-Worker-01-LXC" set.
-Context "default" created.
-Switched to context "default".
-Cluster "hacwa" set.
-User "system:node:K8S-Worker-02-LXC" set.
-Context "default" created.
-Switched to context "default".
-Cluster "hacwa" set.
-User "system:node:K8S-Worker-03-LXC" set.
-Context "default" created.
-Switched to context "default".
-```
-
 ### The kube-proxy Kubernetes Configuration File
 
 Generate a kubeconfig file for the `kube-proxy` service:
@@ -64,7 +47,7 @@ Generate a kubeconfig file for the `kube-proxy` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.kubernetes.local:6443 \
+    --server=https://lb-01.hacwa.internal:6443 \
     --kubeconfig=kube-proxy.kubeconfig
 
   kubectl config set-credentials system:kube-proxy \
@@ -83,18 +66,6 @@ Generate a kubeconfig file for the `kube-proxy` service:
 }
 ```
 
-Results:
-
-```text
-
-Cluster "hacwa" set.
-User "system:kube-proxy" set.
-Context "default" modified.
-Switched to context "default".
-
-
-kube-proxy.kubeconfig
-```
 
 ### The kube-controller-manager Kubernetes Configuration File
 
@@ -105,7 +76,7 @@ Generate a kubeconfig file for the `kube-controller-manager` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.kubernetes.local:6443 \
+    --server=https://lb-01.hacwa.internal:6443 \
     --kubeconfig=kube-controller-manager.kubeconfig
 
   kubectl config set-credentials system:kube-controller-manager \
@@ -124,11 +95,7 @@ Generate a kubeconfig file for the `kube-controller-manager` service:
 }
 ```
 
-Results:
 
-```text
-kube-controller-manager.kubeconfig
-```
 
 
 ### The kube-scheduler Kubernetes Configuration File
@@ -140,7 +107,7 @@ Generate a kubeconfig file for the `kube-scheduler` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.kubernetes.local:6443 \
+    --server=https://lb-01.hacwa.internal:6443 \
     --kubeconfig=kube-scheduler.kubeconfig
 
   kubectl config set-credentials system:kube-scheduler \
@@ -159,11 +126,6 @@ Generate a kubeconfig file for the `kube-scheduler` service:
 }
 ```
 
-Results:
-
-```text
-kube-scheduler.kubeconfig
-```
 
 ### The admin Kubernetes Configuration File
 
@@ -174,7 +136,7 @@ Generate a kubeconfig file for the `admin` user:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://127.0.0.1:6443 \
+    --server=https://lb-01.hacwa.internal:6443 \
     --kubeconfig=admin.kubeconfig
 
   kubectl config set-credentials admin \
@@ -193,11 +155,7 @@ Generate a kubeconfig file for the `admin` user:
 }
 ```
 
-Results:
 
-```text
-admin.kubeconfig
-```
 
 ## Distribute the Kubernetes Configuration Files
 
