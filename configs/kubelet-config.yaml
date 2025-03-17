@@ -9,7 +9,7 @@ authentication:
     clientCAFile: "/var/lib/kubelet/ca.crt"
 authorization:
   mode: Webhook
-clusterDomain: "cluster.local"
+clusterDomain: "hacwa.internal"
 clusterDNS:
   - "10.32.0.10"
 cgroupDriver: systemd
