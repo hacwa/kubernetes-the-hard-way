@@ -10,9 +10,9 @@ Copy `etcd` binaries and systemd unit files to the `server` instance:
 set -e
 
 declare -A hosts
-hosts["K8S-Control-Plane-01"]="10.0.21.2"
-hosts["K8S-Control-Plane-02"]="10.0.21.3"
-hosts["K8S-Control-Plane-03"]="10.0.21.4"
+hosts["K8S-Control-Plane-01-VM"]="10.0.21.2"
+hosts["K8S-Control-Plane-02-VM"]="10.0.21.3"
+hosts["K8S-Control-Plane-03-VM"]="10.0.21.4"
 
 for name in "${!hosts[@]}"; do
   host=${hosts[$name]}
