@@ -21,7 +21,7 @@ for name in "${!hosts[@]}"; do
   # Copy etcd binaries and service file
   scp \
     /root/kubernetes-the-hard-way/downloads/etcd-v3.4.34-linux-amd64.tar.gz \
-    "/root/kubernetes-the-hard-way/units/etcd-$name.service" \
+    "/root/kubernetes-the-hard-way/units/etcd-$name-VM.service" \
     "root@$host:~/"
 
   if [[ $? -ne 0 ]]; then
@@ -43,7 +43,7 @@ for name in "${!hosts[@]}"; do
     cp /etc/kubernetes/pki/ca.crt /etc/kubernetes/pki/kube-api-server.key /etc/kubernetes/pki/kube-api-server.crt /etc/etcd/
 
     echo "Moving etcd service file..."
-    mv etcd-$name.service /etc/systemd/system/etcd.service
+    mv etcd-$name-VM.service /etc/systemd/system/etcd.service
 
     echo "Reloading systemd and enabling etcd..."
     systemctl daemon-reload
