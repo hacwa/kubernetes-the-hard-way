@@ -1,10 +1,10 @@
-10.0.18.2 jumpbox.HACWA.INTERNAL server
-10.0.20.2 K8S-LB-01-VM.HACWA.INTERNAL l K8S-LB-01-VM 10.0.20.0/29
-10.0.20.3 K8S-LB-02-VM.HACWA.INTERNAL K8S-LB-02-VM 10.0.20.0/29
-10.0.20.4 K8S-LB-VIP-VM.HACWA.INTERNAL K8S-LB-VIP-VM
-10.0.21.2 K8S-CONTROL-PLANE-01-VM.HACWA.INTERNAL K8S-CONTROL-PLANE-01-VM 10.0.21.0/29
-10.0.21.3 K8S-CONTROL-PLANE-02-VM.HACWA.INTERNAL K8S-CONTROL-PLANE-02-VM 10.0.21.0/29
-10.0.21.4 K8S-CONTROL-PLANE-03-VM.HACWA.INTERNAL K8S-CONTROL-PLANE-03-VM 10.0.21.0/29
-10.0.22.2 K8S-WORKER-01-VM.HACWA.INTERNAL K8S-WORKER-01-VM 10.0.22.0/29
-10.0.22.3 K8S-WORKER-02-VM.HACWA.INTERNAL K8S-WORKER-02-VM 10.0.22.0/29
-10.0.22.4 K8S-WORKER-03-VM.HACWA.INTERNAL K8S-WORKER-03-VM 10.0.22.0/29
+10.0.18.2 jumpbox.hacwa.internal server
+10.0.20.2 K8S-LB-01-vm.hacwa.internal l K8S-LB-01-vm 10.0.20.0/29
+10.0.20.3 K8S-LB-02-vm.hacwa.internal K8S-LB-02-vm 10.0.20.0/29
+10.0.20.4 K8S-LB-VIP-vm.hacwa.internal K8S-LB-VIP-vm
+10.0.21.2 k8s-control-plane-01-vm.hacwa.internal k8s-control-plane-01-vm 10.0.21.0/29
+10.0.21.3 k8s-control-plane-02-vm.hacwa.internal k8s-control-plane-02-vm 10.0.21.0/29
+10.0.21.4 k8s-control-plane-03-vm.hacwa.internal k8s-control-plane-03-vm 10.0.21.0/29
+10.0.22.2 k8s-worker-01-vm.hacwa.internal k8s-worker-01-vm 10.0.22.0/29
+10.0.22.3 k8s-worker-02-vm.hacwa.internal k8s-worker-02-vm 10.0.22.0/29
+10.0.22.4 k8s-worker-03-vm.hacwa.internal k8s-worker-03-vm 10.0.22.0/29
