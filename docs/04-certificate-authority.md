@@ -42,7 +42,7 @@ Generate the certificates and private keys:
 
 ```bash
 certs=(
-  "admin" "K8S-Worker-01-LXC" "K8S-Worker-02-LXC" "K8S-Worker-03-LXC"
+  "admin" "K8S-Worker-01-VM" "K8S-Worker-02-VM" "K8S-Worker-03-VM"
   "kube-proxy" "kube-scheduler"
   "kube-controller-manager"
   "kube-api-server"
