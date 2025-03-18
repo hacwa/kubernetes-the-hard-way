@@ -148,7 +148,10 @@ mv kube-scheduler.service /etc/systemd/system/
   systemctl enable kube-apiserver \
     kube-controller-manager kube-scheduler
     
-  systemctl start kube-apiserver \
+  systemctl restart kube-apiserver \
+    kube-controller-manager kube-scheduler
+
+  systemctl status kube-apiserver \
     kube-controller-manager kube-scheduler
 }
 ```
