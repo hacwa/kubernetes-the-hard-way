@@ -8,7 +8,7 @@ Copy Kubernetes binaries and systemd unit files to each worker instance:
 
 ```bash
 
-for host in $(awk '$3 ~ /WORKER/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /worker/ {print $3}' machines.txt); do
   SUBNET=$(grep "$host" machines.txt | awk '{print $4}')
   
   if [[ -z "$SUBNET" ]]; then
