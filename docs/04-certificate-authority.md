@@ -80,7 +80,7 @@ In this section you will copy the various certificates to every machine at a pat
 Copy the appropriate certificates and private keys to the worker nodes machines:
 
 ```bash
-for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /WORKER/ {print $3}' machines.txt); do
   echo "Setting up kubelet files on $host..."
   
   # Ensure SSH connection works
@@ -122,7 +122,7 @@ Copy the appropriate certificates and private keys to the `Control-Plane` machin
 
 ```bash
 
-for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /PLANE/ {print $3}' machines.txt); do
   echo "Copying files to $host..."
 
   # Ensure SSH connection works
