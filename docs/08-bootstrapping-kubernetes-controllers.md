@@ -7,7 +7,7 @@ In this lab you will bootstrap the Kubernetes control plane. The following compo
 Connect to the `jumpbox` and copy Kubernetes binaries and systemd unit files to the `server - DOES THIS MEAN CONTROLLER?!?!?!?!?!?! fkit, I am trying on CONTROLLER` instance:
 
 ```bash
-for host in $(awk '$3 ~ /PLANE/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /plane/ {print $3}' machines.txt); do
   echo "Copying files to $host..."
   
   FILES=(
