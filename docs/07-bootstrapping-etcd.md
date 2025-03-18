@@ -10,9 +10,9 @@ Copy `etcd` binaries and systemd unit files to the `server` instance:
 set -e
 
 declare -A hosts
-hosts["K8S-Control-Plane-01"]="10.0.16.2"
-hosts["K8S-Control-Plane-02"]="10.0.16.3"
-hosts["K8S-Control-Plane-03"]="10.0.16.4"
+hosts["K8S-Control-Plane-01"]="10.0.21.2"
+hosts["K8S-Control-Plane-02"]="10.0.21.3"
+hosts["K8S-Control-Plane-03"]="10.0.21.4"
 
 for name in "${!hosts[@]}"; do
   host=${hosts[$name]}
@@ -72,12 +72,12 @@ etcdctl member list
 ```bash
 # Validate cluster health
 echo ">>> Checking cluster health..."
-ETCDCTL_API=3 etcdctl --endpoints="http://10.0.16.2:2379,http://10.0.16.3:2379,http://10.0.16.4:2379" endpoint health
+ETCDCTL_API=3 etcdctl --endpoints="http://10.0.21.2:2379,http://10.0.21.3:2379,http://10.0.21.4:2379" endpoint health
 ```
 ```bash
 # Validate cluster health
 echo ">>> Checking cluster health..."
-ETCDCTL_API=3 etcdctl --endpoints="http://10.0.16.2:2379" member list
+ETCDCTL_API=3 etcdctl --endpoints="http://10.0.21.2:2379" member list
 ```
 
 
