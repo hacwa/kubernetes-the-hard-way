@@ -28,7 +28,7 @@ done
 ```
 
 ```bash
-for host in $(awk '$3 ~ /WORKER/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /worker/ {print $3}' machines.txt); do
   echo "Copying files to $host..."
 
   scp \
