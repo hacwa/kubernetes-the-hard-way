@@ -10,9 +10,9 @@ Copy `etcd` binaries and systemd unit files to the `server` instance:
 set -e
 
 declare -A hosts
-hosts["K8S-CONTROL-PLANE-01-VM"]="10.0.21.2"
-hosts["K8S-CONTROL-PLANE-02-VM"]="10.0.21.3"
-hosts["K8S-CONTROL-PLANE-03-VM"]="10.0.21.4"
+hosts["k8s-control-plane-01-vm"]="10.0.21.2"
+hosts["k8s-control-plane-02-vm"]="10.0.21.3"
+hosts["k8s-control-plane-03-VM"]="10.0.21.4"
 
 for name in "${!hosts[@]}"; do
   host=${hosts[$name]}
@@ -48,6 +48,8 @@ for name in "${!hosts[@]}"; do
     echo "Reloading systemd and enabling etcd..."
     systemctl daemon-reload
     systemctl enable --now etcd || true
+    systemctl restart etcd
+    systemctl status etcd
 EOF
 
   echo "etcd setup completed on $name ($host)"
