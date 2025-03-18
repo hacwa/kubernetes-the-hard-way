@@ -1,0 +1,10 @@
+10.0.18.2 jumpbox.hacwa.internal server
+10.0.20.2 K8S-LB-01-VM.hacwa.internal K8S-LB-01-VM
+10.0.20.3 K8S-LB-02-VM.hacwa.internal K8S-LB-02-VM
+10.0.20.4 K8S-LB-VIP-VM.hacwa.internal K8S-LB-VIP-VM
+10.0.21.2 K8S-Control-Plane-01-VM.hacwa.internal K8S-Control-Plane-01-VM
+10.0.21.3 K8S-Control-Plane-02-VM.hacwa.internal K8S-Control-Plane-02-VM
+10.0.21.4 K8S-Control-Plane-03-VM.hacwa.internal K8S-Control-Plane-03-VM
+10.0.22.2 K8S-Worker-01-VM.hacwa.internal K8S-Worker-01-VM
+10.0.22.3 K8S-Worker-02-VM.hacwa.internal K8S-Worker-02-VM
+10.0.22.4 K8S-Worker-03-VM.hacwa.internal K8S-Worker-03-VM
