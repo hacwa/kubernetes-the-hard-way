@@ -19,7 +19,7 @@ for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://lb-01.hacwa.internal:6443 \
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443 \
     --kubeconfig=${host}.kubeconfig
 
   kubectl config set-credentials system:node:${host} \
@@ -47,7 +47,7 @@ Generate a kubeconfig file for the `kube-proxy` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://lb-01.hacwa.internal:6443 \
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443 \
     --kubeconfig=kube-proxy.kubeconfig
 
   kubectl config set-credentials system:kube-proxy \
@@ -76,7 +76,7 @@ Generate a kubeconfig file for the `kube-controller-manager` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://lb-01.hacwa.internal:6443 \
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443 \
     --kubeconfig=kube-controller-manager.kubeconfig
 
   kubectl config set-credentials system:kube-controller-manager \
@@ -107,7 +107,7 @@ Generate a kubeconfig file for the `kube-scheduler` service:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://lb-01.hacwa.internal:6443 \
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443 \
     --kubeconfig=kube-scheduler.kubeconfig
 
   kubectl config set-credentials system:kube-scheduler \
@@ -136,7 +136,7 @@ Generate a kubeconfig file for the `admin` user:
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://lb-01.hacwa.internal:6443 \
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443 \
     --kubeconfig=admin.kubeconfig
 
   kubectl config set-credentials admin \
