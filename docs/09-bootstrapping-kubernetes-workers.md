@@ -61,9 +61,9 @@ done
 The commands in this lab must be run on each worker instance: `node-0`, `node-1`. Login to the worker instance using the `ssh` command. Example:
 
 ```bash
-ssh root@K8S-Worker-01-LXC
-ssh root@K8S-Worker-02-LXC
-ssh root@K8S-Worker-03-LXC
+ssh root@K8S-Worker-01-VM
+ssh root@K8S-Worker-02-VM
+ssh root@K8S-Worker-03-VM
 
 
 ```
