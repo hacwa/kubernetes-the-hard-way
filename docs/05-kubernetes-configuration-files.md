@@ -15,7 +15,7 @@ When generating kubeconfig files for Kubelets the client certificate matching th
 Generate a kubeconfig file for the node-0 worker node:
 
 ```bash
-for host in $(cat machines.txt | awk '{print $3}' | grep Worker); do
+for host in $(cat machines.txt | awk '{print $3}' | grep WORKER); do
   kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
