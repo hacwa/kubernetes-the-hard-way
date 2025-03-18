@@ -20,6 +20,13 @@ for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
     "units/kube-scheduler.service"
     "configs/kube-scheduler.yaml"
     "configs/kube-apiserver-to-kubelet.yaml"
+    "ca.crt"
+    "ca.key"
+    "kube-api-server.key"
+    "kube-api-server.crt"
+    "service-accounts.key"
+    "service-accounts.crt"
+    "encryption-config.yaml"
   )
 
   for file in "${FILES[@]}"; do
@@ -42,7 +49,7 @@ done
 ```
 
 ```bash
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-01-VM:~
+scp   K8S-Control-Plane-01-VM:~
 scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-VM:~
 scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-VM:~
 ```
