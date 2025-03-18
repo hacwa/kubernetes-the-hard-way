@@ -5,13 +5,13 @@ Documentation=https://github.com/etcd-io/etcd
 [Service]
 Type=notify
 ExecStart=/usr/local/bin/etcd \
-  --name K8S-CONTROL-PLANE-01-VM \
+  --name k8s-control-plane-01-vm \
   --initial-advertise-peer-urls http://10.0.21.2:2380 \
   --listen-peer-urls http://10.0.21.2:2380 \
   --listen-client-urls http://10.0.21.2:2379,http://127.0.0.1:2379 \
   --advertise-client-urls http://10.0.21.2:2379 \
   --initial-cluster-token etcd-cluster-0 \
-  --initial-cluster K8S-CONTROL-PLANE-01-VM=http://10.0.21.2:2380,K8S-CONTROL-PLANE-02-VM=http://10.0.21.3:2380,K8S-CONTROL-PLANE-03-VM=http://10.0.21.4:2380 \
+  --initial-cluster k8s-control-plane-01-vm=http://10.0.21.2:2380,k8s-control-plane-02-vm=http://10.0.21.3:2380,k8s-control-plane-03-vm=http://10.0.21.4:2380 \
   --initial-cluster-state new \
   --data-dir=/var/lib/etcd
 Restart=on-failure
