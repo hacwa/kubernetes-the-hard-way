@@ -41,14 +41,19 @@ for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
 done
 ```
 
+```bash
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-01-LXC:~
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-LXC:~
+scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-LXC:~
+```
 
 
 The commands in this lab must be run on the controller instance: `server`. Login to the controller instance using the `ssh` command. Example:
 
 ```bash
-ssh root@K8S-Control-Plane-01
-ssh root@K8S-Control-Plane-02
-ssh root@K8S-Control-Plane-03
+ssh root@K8S-Control-Plane-01-VM
+ssh root@K8S-Control-Plane-02-VM
+ssh root@K8S-Control-Plane-03-VM
 
 ```
 
@@ -76,13 +81,6 @@ Install the Kubernetes binaries:
     /usr/local/bin/
 }
 ```
-
-```bash
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-01-LXC:~
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-LXC:~
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-LXC:~
-```
-
 
 
 ### Configure the Kubernetes API Server   - this shit here..... are they the files which are in /etc/kubernetes/pki?!?! - gotta go back :/ 
