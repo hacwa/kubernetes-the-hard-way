@@ -7,26 +7,35 @@ In this lab you will bootstrap two Kubernetes worker nodes. The following compon
 Copy Kubernetes binaries and systemd unit files to each worker instance:
 
 ```bash
-for host in node-0 node-1; do
-  SUBNET=$(grep $host machines.txt | cut -d " " -f 4)
-  sed "s|SUBNET|$SUBNET|g" \
-    configs/10-bridge.conf > 10-bridge.conf 
-    
-  sed "s|SUBNET|$SUBNET|g" \
-    configs/kubelet-config.yaml > kubelet-config.yaml
-    
-  scp 10-bridge.conf kubelet-config.yaml \
-  root@$host:~/
+
+for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+  SUBNET=$(grep "$host" machines.txt | awk '{print $4}')
+  
+  if [[ -z "$SUBNET" ]]; then
+    echo "ERROR: No subnet found for $host in machines.txt. Skipping..."
+    continue
+  fi
+
+  echo "Configuring $host with subnet $SUBNET..."
+
+  sed "s|SUBNET|$SUBNET|g" configs/10-bridge.conf > /tmp/10-bridge.conf
+  sed "s|SUBNET|$SUBNET|g" configs/kubelet-config.yaml > /tmp/kubelet-config.yaml
+
+  scp /tmp/10-bridge.conf /tmp/kubelet-config.yaml "root@$host:~/"
+
+  echo "Successfully configured $host"
 done
 ```
 
 ```bash
-for host in node-0 node-1; do
+for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+  echo "Copying files to $host..."
+
   scp \
-    downloads/runc.arm64 \
-    downloads/crictl-v1.31.1-linux-arm64.tar.gz \
-    downloads/cni-plugins-linux-arm64-v1.6.0.tgz \
-    downloads/containerd-2.0.0-linux-arm64.tar.gz \
+    downloads/runc.amd64 \
+    downloads/crictl-v1.31.1-linux-amd64.tar.gz \
+    downloads/cni-plugins-linux-amd64-v1.6.0.tgz \
+    downloads/containerd-2.0.0-linux-amd64.tar.gz \
     downloads/kubectl \
     downloads/kubelet \
     downloads/kube-proxy \
@@ -37,14 +46,26 @@ for host in node-0 node-1; do
     units/containerd.service \
     units/kubelet.service \
     units/kube-proxy.service \
-    root@$host:~/
+    "root@$host:~/"
+
+  if [[ $? -ne 0 ]]; then
+    echo "ERROR: Failed to copy files to $host"
+    continue
+  fi
+
+  echo "Successfully copied files to $host"
 done
+
 ```
 
 The commands in this lab must be run on each worker instance: `node-0`, `node-1`. Login to the worker instance using the `ssh` command. Example:
 
 ```bash
-ssh root@node-0
+ssh root@K8S-Worker-01-LXC
+ssh root@K8S-Worker-02-LXC
+ssh root@K8S-Worker-03-LXC
+
+
 ```
 
 ## Provisioning a Kubernetes Worker Node
@@ -95,10 +116,10 @@ Install the worker binaries:
 ```bash
 {
   mkdir -p containerd
-  tar -xvf crictl-v1.31.1-linux-arm64.tar.gz
-  tar -xvf containerd-2.0.0-linux-arm64.tar.gz -C containerd
-  tar -xvf cni-plugins-linux-arm64-v1.6.0.tgz -C /opt/cni/bin/
-  mv runc.arm64 runc
+  tar -xvf crictl-v1.31.1-linux-amd64.tar.gz
+  tar -xvf containerd-2.0.0-linux-amd64.tar.gz -C containerd
+  tar -xvf cni-plugins-linux-amd64-v1.6.0.tgz -C /opt/cni/bin/
+  mv runc.amd64 runc
   chmod +x crictl kubectl kube-proxy kubelet runc 
   mv crictl kubectl kube-proxy kubelet runc /usr/local/bin/
   mv containerd/bin/* /bin/
