@@ -163,7 +163,7 @@ Copy the `kubelet` and `kube-proxy` kubeconfig files to the node-0 instance:
 
 ```bash
 
-for host in $(awk '$3 ~ /Worker/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /WORKER/ {print $3}' machines.txt); do
   echo "Configuring kubelet and kube-proxy on $host..."
   
   # Ensure SSH connection works
@@ -217,7 +217,7 @@ for file in "${FILES[@]}"; do
   fi
 done
 
-for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /PLANE/ {print $3}' machines.txt); do
   echo "Copying kubeconfig files to $host..."
 
   for file in "${FILES[@]}"; do
