@@ -32,7 +32,7 @@ if [[ ! -f "$FILE" ]]; then
   exit 1
 fi
 
-for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /PLANE/ {print $3}' machines.txt); do
   echo "Copying $FILE to $host..."
 
   scp "$FILE" "root@$host:~/"
