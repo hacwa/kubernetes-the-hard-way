@@ -12,7 +12,7 @@ set -e
 declare -A hosts
 hosts["k8s-control-plane-01-vm"]="10.0.21.2"
 hosts["k8s-control-plane-02-vm"]="10.0.21.3"
-hosts["k8s-control-plane-03-VM"]="10.0.21.4"
+hosts["k8s-control-plane-03-vm"]="10.0.21.4"
 
 for name in "${!hosts[@]}"; do
   host=${hosts[$name]}
