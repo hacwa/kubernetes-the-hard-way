@@ -48,14 +48,8 @@ for host in $(awk '$3 ~ /Plane/ {print $3}' machines.txt); do
 done
 ```
 
-```bash
-scp   K8S-Control-Plane-01-VM:~
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-02-VM:~
-scp ca.crt ca.key kube-api-server.key kube-api-server.crt service-accounts.key service-accounts.crt encryption-config.yaml K8S-Control-Plane-03-VM:~
-```
 
-
-The commands in this lab must be run on the controller instance: `server`. Login to the controller instance using the `ssh` command. Example:
+The commands in this lab must be run on the controller instance: `server/controller`. Login to the controller instance using the `ssh` command. Example:
 
 ```bash
 ssh root@K8S-Control-Plane-01-VM
