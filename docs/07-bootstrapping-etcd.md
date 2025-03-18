@@ -10,9 +10,9 @@ Copy `etcd` binaries and systemd unit files to the `server` instance:
 set -e
 
 declare -A hosts
-hosts["K8S-Control-Plane-01-VM"]="10.0.21.2"
-hosts["K8S-Control-Plane-02-VM"]="10.0.21.3"
-hosts["K8S-Control-Plane-03-VM"]="10.0.21.4"
+hosts["K8S-CONTROL-PLANE-01-VM"]="10.0.21.2"
+hosts["K8S-CONTROL-PLANE-02-VM"]="10.0.21.3"
+hosts["K8S-CONTROL-PLANE-03-VM"]="10.0.21.4"
 
 for name in "${!hosts[@]}"; do
   host=${hosts[$name]}
@@ -29,7 +29,7 @@ for name in "${!hosts[@]}"; do
     continue
   fi
 
-  # Execute commands remotely on each control plane
+  # Execute commands remotely on each CONTROL PLANE
   ssh root@"$host" bash <<EOF
     echo "Extracting and moving etcd binaries..."
     tar -xvf etcd-v3.4.34-linux-amd64.tar.gz
