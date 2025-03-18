@@ -42,7 +42,7 @@ Generate the certificates and private keys:
 
 ```bash
 certs=(
-  "admin" "K8S-WORKER-01-VM" "K8S-WORKER-02-VM" "K8S-WORKER-03-VM"
+  "admin" "k8s-worker-01-vm" "k8s-worker-02-vm" "k8s-worker-03-vm"
   "kube-proxy" "kube-scheduler"
   "kube-controller-manager"
   "kube-api-server"
@@ -80,7 +80,7 @@ In this section you will copy the various certificates to every machine at a pat
 Copy the appropriate certificates and private keys to the worker nodes machines:
 
 ```bash
-for host in $(awk '$3 ~ /WORKER/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /worker/ {print $3}' machines.txt); do
   echo "Setting up kubelet files on $host..."
   
   # Ensure SSH connection works
@@ -122,7 +122,7 @@ Copy the appropriate certificates and private keys to the `Control-Plane` machin
 
 ```bash
 
-for host in $(awk '$3 ~ /PLANE/ {print $3}' machines.txt); do
+for host in $(awk '$3 ~ /plane/ {print $3}' machines.txt); do
   echo "Copying files to $host..."
 
   # Ensure SSH connection works
