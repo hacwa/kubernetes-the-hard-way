@@ -11,8 +11,7 @@ Each kubeconfig requires a Kubernetes API Server to connect to.
 You should be able to ping `server.kubernetes.local` based on the `/etc/hosts` DNS entry from a previous lap.
 
 ```bash
-curl -k --cacert ca.crt \
-  https://server.kubernetes.local:6443/version
+curl -k --cacert ca.crt https://K8S-LB-VIP-VM.hacwa.internal:6443/version
 ```
 
 ```text
@@ -25,7 +24,7 @@ curl -k --cacert ca.crt \
   "buildDate": "2024-10-22T20:28:14Z",
   "goVersion": "go1.22.8",
   "compiler": "gc",
-  "platform": "linux/arm64"
+  "platform": "linux/amd64"
 }
 ```
 
@@ -33,20 +32,20 @@ Generate a kubeconfig file suitable for authenticating as the `admin` user:
 
 ```bash
 {
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster hacwa\
     --certificate-authority=ca.crt \
     --embed-certs=true \
-    --server=https://server.kubernetes.local:6443
+    --server=https://K8S-LB-VIP-VM.hacwa.internal:6443
 
   kubectl config set-credentials admin \
     --client-certificate=admin.crt \
     --client-key=admin.key
 
-  kubectl config set-context kubernetes-the-hard-way \
-    --cluster=kubernetes-the-hard-way \
+  kubectl config set-context hacwa\
+    --cluster=hacwa\
     --user=admin
 
-  kubectl config use-context kubernetes-the-hard-way
+  kubectl config use-context hacwa
 }
 ```
 The results of running the command above should create a kubeconfig file in the default location `~/.kube/config` used by the  `kubectl` commandline tool. This also means you can run the `kubectl` command without specifying a config.
